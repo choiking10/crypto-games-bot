@@ -4,6 +4,8 @@ import random
 from crypto_games import bet
 
 class CryptoHandler:
+    total_profit = 0
+
     def get_priority(self):
         return 0
 
@@ -24,10 +26,13 @@ class CryptoHandler:
         select = colors[0]
         if bet_result.profit > 0:
             select = colors[1]
+        self.total_profit += bet_result.profit
 
         print(select, end="")
-        print("roll:", bet_result.roll, "target:", bet_result.target,
-              "profit:", bet_result.profit)
+        print("roll:", bet_result.roll,
+              "target:", bet_result.target,
+              "profit:", "{0:.8f}".format(bet_result.profit),
+              "total_profit:", "{0:.8f}".format(self.total_profit))
         print("\033[0m", end="")
 
 
@@ -76,7 +81,6 @@ class TwiceStrategyHandler(CryptoHandler):
 
     def place_bet(self, bet_log):
         p_betting = copy.deepcopy(bet_log[0].betting)
-        p_betting.bet = self.min_bet
         p_betting.under_over = random.choice([True, False])
         p_betting.payout = self.times
         p_betting.bet = -bet_log[0].profit * self.times
@@ -85,3 +89,4 @@ class TwiceStrategyHandler(CryptoHandler):
             return None
 
         return p_betting
+
