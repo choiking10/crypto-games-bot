@@ -1,4 +1,5 @@
 import random
+import copy
 
 from crypto_games.handler import CryptoHandler
 from crypto_games.bet import Betting
@@ -27,7 +28,12 @@ class MyHandler(CryptoHandler):
                     f.write(str(i) + "\n")
 
                 f.close()
+        if len(bet_log) > 0:
+            p_bet = copy.deepcopy(bet_log[0].betting)
 
-
+            p_bet.under_over = random.choice([True, False])
+            return p_bet
         return None
 
+    def after_bet(self, bet_result, budget):
+        pass
