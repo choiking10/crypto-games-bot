@@ -6,13 +6,17 @@ from crypto_games import bet
 class CryptoHandler:
     total_profit = 0
 
+    def __init__(self, priority=0, probability=1.0):
+        self.priority = priority
+        self.probability = probability
+
     def get_priority(self):
-        return 0
+        return self.priority
 
     def execution_probability(self, bet_log):
-        return 1.0
+        return self.probability
 
-    def place_bet(self, bet_log) -> bet.Betting:
+    def place_bet(self, bet_log, budget) -> bet.Betting:
         """
             bet_log is a param which contains BettingResults
 
@@ -21,7 +25,7 @@ class CryptoHandler:
         """
         raise NotImplementedError("please write the place_bet function")
 
-    def after_bet(self, bet_result: bet.BettingResult):
+    def after_bet(self, bet_result: bet.BettingResult, budget):
         colors = ["\033[31m", "\033[32m"]
         select = colors[0]
         if bet_result.profit > 0:
@@ -29,7 +33,8 @@ class CryptoHandler:
         self.total_profit += bet_result.profit
 
         print(select, end="")
-        print("roll:", bet_result.roll,
+        print(type(self).__name__,
+              "roll:", bet_result.roll,
               "target:", bet_result.target,
               "profit:", "{0:.8f}".format(bet_result.profit),
               "total_profit:", "{0:.8f}".format(self.total_profit))
@@ -37,15 +42,14 @@ class CryptoHandler:
 
 
 class CrisisDetectHandler(CryptoHandler):
-    def __init__(self, recent_count, under, over, limit, betting):
+    def __init__(self, recent_count, under, over, limit, betting=None,
+                 priority=99, probability=1.0):
         self.recent_count = recent_count
         self.under = under
         self.over = over
         self.limit = limit
         self.betting = betting
-
-    def get_priority(self):
-        return 99
+        super(CrisisDetectHandler, self).__init__(priority, probability)
 
     def execution_probability(self, bet_log):
         if len(bet_log) < 1:
@@ -55,21 +59,19 @@ class CrisisDetectHandler(CryptoHandler):
             if bet_log[re].roll <= self.under or bet_log[re].roll >= self.over:
                 count += 1
         if count >= self.limit:
-            return 1
+            return self.probability
         return 0
 
-    def place_bet(self, bet_log):
+    def place_bet(self, bet_log, budget):
         return self.betting
 
 
 class TwiceStrategyHandler(CryptoHandler):
-    def __init__(self, min_bet, max_bet, times):
+    def __init__(self, min_bet, max_bet, times, priority=100, probability=1.0):
         self.min_bet = min_bet
         self.max_bet = max_bet
         self.times = times
-
-    def get_priority(self):
-        return 100
+        super(TwiceStrategyHandler, self).__init__(priority, probability)
 
     def execution_probability(self, bet_log):
         if len(bet_log) <= 0:
@@ -79,7 +81,7 @@ class TwiceStrategyHandler(CryptoHandler):
             return 1
         return 0
 
-    def place_bet(self, bet_log):
+    def place_bet(self, bet_log, budget):
         p_betting = copy.deepcopy(bet_log[0].betting)
         p_betting.under_over = random.choice([True, False])
         p_betting.payout = self.times

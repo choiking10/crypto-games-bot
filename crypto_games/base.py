@@ -6,7 +6,7 @@ import secrets
 class CryptoGames:
     """
     api href : https://api.crypto-games.net
-    
+
     """
     BASE = "https://api.crypto-games.net"
     VERSION = "v1"
@@ -47,7 +47,7 @@ class CryptoGames:
         try:
             return json.loads(res.content)
         except ValueError:
-            return {"error": "json decoder error: "+ res.content}
+            return {"error": "json decoder error: "}
 
     def place_bat(self, coin_kind, bet: float, payout: float,
                   under_over=True, client_seed=None):
