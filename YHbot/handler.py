@@ -92,3 +92,10 @@ class KooHandler(CryptoHandler):
             return self.place_base_bet(place_money, False)
 
         return None
+
+    def after_bet(self, bet_result, budget):
+        if bet_result.profit < 0:
+            self.accum += 1
+        else:
+            self.accum = 0
+        
