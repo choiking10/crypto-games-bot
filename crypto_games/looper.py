@@ -1,18 +1,18 @@
 import random
 
 from .base import CryptoGames
-from .bet import Betting, BettingResult
 from .handler import CryptoHandler
+from .betting_info import Betting, BettingResult
 
 class Looper:
-    def __init__(self, api_key, default_bet: Betting, budget):
+    def __init__(self, api_key, default_betting: Betting, budget):
         self.games = CryptoGames(api_key)
-        self.default_bet = default_bet
+        self.default_betting = default_betting
         self.handlers = dict()
         self.bet_log = []
         self.budget = budget
         if self.budget == 0:
-            self.budget = self.games.balance(default_bet.coin_kind)
+            self.budget = self.games.balance(default_betting.coin_kind)
 
     def add_handler(self, handler: CryptoHandler):
         pri = -handler.get_priority()
@@ -21,15 +21,15 @@ class Looper:
 
         self.handlers[pri].append(handler)
 
-    def betting(self, bet: Betting):
+    def place_bat(self, betting: Betting):
         data = self.games.place_bat(
-            coin_kind=bet.coin_kind,
-            under_over=bet.under_over,
-            bet=bet.bet,
-            payout=bet.payout,
-            client_seed=bet.client_seed
+            coin_kind=betting.coin_kind,
+            under_over=betting.under_over,
+            bet=betting.bet,
+            payout=betting.payout,
+            client_seed=betting.client_seed
         )
-        return BettingResult(data, betting=bet)
+        return BettingResult(data, betting=betting)
 
     def run(self):
         while self.budget > 0:
@@ -49,12 +49,12 @@ class Looper:
                         bet = h.place_bet(self.bet_log, self.budget)
 
                         if bet is not None:
-                            result = self.betting(bet)
+                            result = self.place_bat(bet)
                             self.budget += result.profit
                             h.after_bet(result, self.budget)
 
             if result is None:
-                result = self.betting(self.default_bet)
+                result = self.place_bat(self.default_betting)
                 self.budget += result.profit
 
             self.bet_log.insert(0, result)

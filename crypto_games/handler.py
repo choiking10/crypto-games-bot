@@ -1,7 +1,8 @@
 import copy
 import random
 
-from crypto_games import bet
+from crypto_games.betting_info import Betting, BettingResult
+
 
 class CryptoHandler:
     total_profit = 0
@@ -16,7 +17,7 @@ class CryptoHandler:
     def execution_probability(self, bet_log):
         return self.probability
 
-    def place_bet(self, bet_log, budget) -> bet.Betting:
+    def place_bet(self, bet_log, budget) -> Betting:
         """
             bet_log is a param which contains BettingResults
 
@@ -25,7 +26,7 @@ class CryptoHandler:
         """
         raise NotImplementedError("please write the place_bet function")
 
-    def after_bet(self, bet_result: bet.BettingResult, budget):
+    def after_bet(self, bet_result: BettingResult, budget):
         colors = ["\033[31m", "\033[32m"]
         select = colors[0]
         if bet_result.profit > 0:

@@ -16,5 +16,5 @@ while True:
     mylooper.add_handler(MyHandler())
     try:
         mylooper.run()
-    except BaseException:
-        pass
+    except BaseException as e:
+        print(e)
