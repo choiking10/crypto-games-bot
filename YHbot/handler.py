@@ -98,4 +98,4 @@ class KooHandler(CryptoHandler):
             self.accum += 1
         else:
             self.accum = 0
-        
+        super(KooHandler, self).after_bet(bet_result, budget)
