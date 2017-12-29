@@ -1,7 +1,6 @@
-from crypto_games.base import CryptoGames
+
 from crypto_games.looper import Looper
-from crypto_games.bet import Betting
-from crypto_games.handler import TwiceStrategyHandler, CrisisDetectHandler
+from crypto_games.betting_info import Betting
 from YHbot.handler import MyHandler
 
 default = Betting(coin_kind="BTC",
