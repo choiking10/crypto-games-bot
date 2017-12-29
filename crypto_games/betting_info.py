@@ -1,11 +1,13 @@
 
 class Betting:
-    def __init__(self, coin_kind, bet, payout, under_over, client_seed=None):
+    def __init__(self, coin_kind, bet, payout, under_over, client_seed=None,
+                 additional=None):
         self.coin_kind = coin_kind
         self.bet = bet
         self.payout = payout
         self.under_over = under_over
         self.client_seed = client_seed
+        self.additional = additional
 
 
 class BettingResult:
