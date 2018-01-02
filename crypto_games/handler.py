@@ -1,7 +1,7 @@
 import copy
 import random
 
-from crypto_games.betting_info import Betting, BettingResult
+from .betting_info import Betting, BettingResult
 
 
 class CryptoHandler:
@@ -35,6 +35,7 @@ class CryptoHandler:
 
         print(select, end="")
         print(type(self).__name__,
+              "bet:", "{0:.8f}".format(bet_result.betting.bet),
               "roll:", bet_result.roll,
               "target:", bet_result.target,
               "profit:", "{0:.8f}".format(bet_result.profit),
