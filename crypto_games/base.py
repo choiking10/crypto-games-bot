@@ -6,7 +6,7 @@ from .exceptions import CryptoException
 
 
 def make_random(length):
-    choi = []
+    choi = [str(i) for i in range(0, 10)]
     for i in range(0, 26):
         choi.append(chr(ord('a') + i))
         choi.append(chr(ord('A') + i))
